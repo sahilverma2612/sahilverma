@@ -141,7 +141,7 @@ int partition(long int arr[], int low, int high) {
     return j;
 }
 
-void quickSort(long int arr[], int low, int high) {
+	void quickSort(long int arr[], int low, int high) {
 
     if (low < high) {
         int pIndex = partition(arr, low, high);
@@ -149,9 +149,9 @@ void quickSort(long int arr[], int low, int high) {
         quickSort(arr, pIndex + 1, high);
         
     }
-}
+	}
 
-int main() {
+	int main() {
 
     srand(time(0)); // Seed for random numbers
 
@@ -182,7 +182,7 @@ int main() {
     }
 
     return 0;
-}   
+	}   
 
 **4.Merge Sort:-** 
 
@@ -230,18 +230,18 @@ void merge(long int arr[], long int low, long int mid, long int high) {
     for (long int i = low, k = 0; i <= high; i++, k++) {
         arr[i] = temp[k];
     }
-}
+	}
 
-void mergeSort(long int arr[], long int low, long int high) {
+	void mergeSort(long int arr[], long int low, long int high) {
 
     if (low >= high) return;
     long int mid = (low + high) / 2;
     mergeSort(arr, low, mid);
     mergeSort(arr, mid + 1, high);
     merge(arr, low, mid, high);
-}
+	}
 
-int main() {
+	int main() {
 
     long int n = 10000;
     int it = 0;
@@ -268,7 +268,7 @@ int main() {
     }
 
     return 0;
-}
+	}
 
 **5. Iterative QuickSort (QSI):-**
 
@@ -381,6 +381,7 @@ int main() {
 
     return 0;
     }
+    
 **6.Insertion Sorting:-**
 
       It is a simple sorting algorithm that builds the final sorted array one element at a time. 
@@ -448,10 +449,57 @@ int main() {
 
     return 0;  
     }
+    
+**7. BINARY SEARCH:-**
 
-    # 🧳 Fractional Knapsack Problem in C++
 
-**7. Knapsack Problem:-**
+📋 Description
+This is a simple C++ implementation of binary search using recursion. Binary search is an 
+efficient algorithm for finding an element in a sorted array, with a time complexity of O(log n).
+
+
+	#include <iostream>
+	using namespace std;
+
+	bool binarySearch(int arr[], int key, int s, int e) {
+    if (s > e) 
+        return false; // Base case: element not found
+
+    int mid = s + (e - s) / 2;
+
+    if (key == arr[mid]) 
+        return true; // Base case: element found
+
+    if (key < arr[mid]) 
+        return binarySearch(arr, key, s, mid - 1); // Search in left half
+    else 
+        return binarySearch(arr, key, mid + 1, e); // Search in right half
+	}
+
+	int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int key = 10;
+
+    bool ans = binarySearch(arr, key, 0, n - 1);
+
+    if (ans) 
+        cout << "Element found" << endl;
+    else 
+        cout << "Element not found" << endl;
+
+    return 0;
+	}
+**INPUT:-**
+		
+  	int arr[] = {2, 3, 4, 10, 40};
+	int key = 10;
+**OUTPUT:-**
+		
+  	Element found
+
+
+**8. Knapsack Problem:-**
 
 This project implements the **Fractional Knapsack Problem** using a greedy approach in C++. In this variant of the classic
 knapsack problem, we are allowed to take **fractions of items** to maximize the total profit, given a fixed weight capacity.
@@ -523,7 +571,7 @@ the total profit by taking whole or fractional parts of items.
     knapsack(Items,20);
 }
 
-**8. Magic Square:-**
+**9. Magic Square:-**
 
 
 This program generates a **Magic Square** of any given odd order `n` using the **Siamese method** (also known as the De la Loubère's method).
@@ -572,7 +620,7 @@ is the same.
         
         }
       } 
-    }
+  	  }
 
       int main() {
       int n;
@@ -601,7 +649,8 @@ is the same.
       return 0;
       }
 
- **Activity Selection Problem**
+ **10.	Activity Selection Problem**
+ 
  
 This program solves the Activity Selection Problem using a greedy algorithm. The goal is to
  select the maximum number of activities that can be scheduled in a given time period
@@ -623,7 +672,7 @@ finish time of the previous selected activity.
 
     bool compare(Activity a1, Activity a2) {
     return a1.finish < a2.finish;
-}
+	}
 
     void activitySelection(vector<Activity> activities) {
     sort(activities.begin(), activities.end(), compare);
@@ -638,7 +687,7 @@ finish time of the previous selected activity.
             lastFinishTime = activities[i].finish;
         }
     }
-}
+	}
 
     int main() {
     vector<Activity> activities = {{1, 3}, {2, 5}, {3, 9}, {0, 6}, {5, 7}, {8, 9}};
@@ -646,11 +695,11 @@ finish time of the previous selected activity.
     activitySelection(activities);
     
     return 0;
-}
+	}
 
 
 
-**Peak Element in an Array**
+**11.	Peak Element in an Array**
 
 This program finds the peak element in an array using an optimized binary search approach.
 
@@ -701,7 +750,7 @@ Time Complexity: O(log n)
 
 
 
-**2D Peak Element**
+**12.	2D Peak Element**
 
 
 This program finds a peak element in a 2D matrix using a binary search-based approach.
@@ -766,7 +815,7 @@ A peak element is an element that is strictly greater than its neighbors in the 
         Peak element is: 21
 
 
-**Prim’s Algorithm Using Near Array for Minimum Spanning Tree (MST)**
+**13.	Prims Algorithm Using Near Array for Minimum Spanning Tree (MST)**
 
 
 This program implements Prim’s Algorithm using the Near Array technique to find 
@@ -886,7 +935,7 @@ Output:-
 
 
 
-   **Strassen's Matrix Multiplication Algorithm**
+   **14.	Strassen's Matrix Multiplication Algorithm**
    
 This program implements Strassen's Algorithm for matrix multiplication, which is an optimized algorithm
 to multiply two square matrices in a time complexity of 𝑂(𝑛log27) compared to the
@@ -1037,7 +1086,7 @@ matrices into smaller sub-matrices and performs matrix multiplications recursive
         890 932 974 1016 
         1210 1268 1326 1384 
 
-**Kruskal’s Algorithm for Minimum Spanning Tree (MST)**
+**15.	Kruskal’s Algorithm for Minimum Spanning Tree (MST)**
 
 This program implements Kruskal's Algorithm for finding the Minimum Spanning Tree (MST)
 of a weighted undirected graph. The algorithm uses the Union-Find (Disjoint Set Union) 
@@ -1142,7 +1191,7 @@ and edge merging.
     Minimum Spanning Tree Cost: 16
 
 
-  **Dijkstra's Algorithm – Shortest Path Finder**
+  **16.	Dijkstra's Algorithm – Shortest Path Finder**
   
 This C++ program implements Dijkstra’s Algorithm to find the shortest path from a source vertex
 to all other vertices in a weighted graph represented by an adjacency matrix.
@@ -1251,7 +1300,7 @@ source node to all other nodes in the graph.
 	8 	 14
 
 
- **Multi-Stage Graph**
+ **17.	MultiStage Graph**
 
  This C++ program finds the minimum-cost path from the source node to the destination 
  node in a directed acyclic multi-stage graph (DAG) using dynamic programming.
@@ -1395,7 +1444,7 @@ path from the source (first stage) to the destination (last stage).
     Minimum cost: 7
 
 
- **Floyd-Warshall Algorithm - All Pairs Shortest Path**
+ **18.	Floyd-Warshall Algorithm - All Pairs Shortest Path**
  
 This C++ program implements the Floyd-Warshall Algorithm, which is used to 
 find the shortest distances between every pair of vertices in a weighted
