@@ -1512,18 +1512,447 @@ Space Complexity: O(V²)**
     11 	 5 	 0 	 7 	
     7 	 1 	 1 	 0 	
 
+**19. Hamiltonian Cycle:-**
+Problem Statement:- A **Hamiltonian Cycle** is a cycle in an undirected graph that visits each vertex exactly once and returns to the starting vertex.
+
+The goal is to determine whether a Hamiltonian Cycle exists in a given graph and, if so, print one such cycle.
 
 
+##  Algorithm Used
+This solution uses the **Backtracking** approach:
+
+1. Start from vertex 0.
+2. Add one vertex at a time to the path.
+3. Check if the vertex is safe (not visited and connected to the last vertex).
+4. If all vertices are in the path and the last vertex connects to the starting vertex, a Hamiltonian Cycle exists.
+
+---
+
+##  Time Complexity
+- **Worst-case time complexity**: `O(N!)` where `N` is the number of vertices.
+- Since the problem is **NP-complete**, this exponential time is expected.
+
+##  Input Format
+The graph is represented as an **adjacency matrix**.
+- `graph[i][j] = 1` means there is an edge between vertex `i` and `j`.
+- `graph[i][j] = 0` means no edge exists.
+
+The matrix should be symmetric for an undirected graph.
+
+##  Output
+- If a Hamiltonian cycle exists, the program prints the path and returns to the starting vertex.
+- If not, it prints: `"No Hamiltonian Cycle exists"`.
+
+
+	  #include <iostream>
+	  #include <vector>
+          using namespace std;
+
+	  #define V 5  // Change this based on number of vertices
+
+          // Utility function to check if current vertex can be added to the Hamiltonian Cycle
+	  bool isSafe(int v, vector<vector<int>>& graph, vector<int>& path, int pos) {
+    	// Check if current vertex is adjacent to the previous vertex
+    	if (graph[path[pos - 1]][v] == 0)
+        return false;
+
+    	// Check if the vertex has already been included
+    	for (int i = 0; i < pos; i++)
+        if (path[i] == v)
+            return false;
+
+    	return true;
+		}
+
+		// Recursive utility to solve the Hamiltonian Cycle problem
+	  bool hamiltonianCycleUtil(vector<vector<int>>& graph, vector<int>& path, int pos) {
+        // Base case: all vertices are in the path
+    	if (pos == V) {
+        // Check if there is an edge from the last vertex to the first
+        return graph[path[pos - 1]][path[0]] == 1;
+    	}
+
+    	// Try different vertices
+    	for (int v = 1; v < V; v++) {
+        if (isSafe(v, graph, path, pos)) {
+            path[pos] = v;
+
+            if (hamiltonianCycleUtil(graph, path, pos + 1))
+                return true;
+
+            // Backtrack
+            path[pos] = -1;
+        }
+    		}
+    	return false;
+		}	
+
+	  bool hamiltonianCycle(vector<vector<int>>& graph) {
+    	 vector<int> path(V, -1);
+    	path[0] = 0;  // Start from vertex 0
+
+    	if (!hamiltonianCycleUtil(graph, path, 1)) {
+        cout << "No Hamiltonian Cycle exists\n";
+        return false;
+    	}
+
+    	cout << "Hamiltonian Cycle found:\n";
+    	for (int i = 0; i < V; i++)
+        cout << path[i] << " ";
+    	cout << path[0] << endl;  // Return to the start
+    	return true;
+	  }
+
+		int main() {
+    	vector<vector<int>> graph = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 1, 1},
+        {0, 1, 0, 0, 1},
+        {1, 1, 0, 0, 1},
+        {0, 1, 1, 1, 0}
+    	};
+
+    	hamiltonianCycle(graph);
+    	return 0;
+	  }
+
+
+ Sample Input (Hardcoded):-
+ 
+	vector<vector<int>> graph = {
+ 	{0, 1, 0, 1, 0},
+ 	{1, 0, 1, 1, 1},
+ 	{0, 1, 0, 0, 1},
+ 	{1, 1, 0, 0, 1},
+ 	{0, 1, 1, 1, 0}
+	};
+
+ Output:-
+ 
+	Hamiltonian Cycle found:
+	0 1 2 4 3 0
 
   
 
+**20.# 🎨 Graph Coloring Problem using Backtracking (C++)** 
+
+ Problem Statement
+
+The **Graph Coloring Problem** involves assigning colors to each vertex of a graph such that no two adjacent vertices share the same color, using at most `M` different colors.
+
+This C++ implementation solves the **M-coloring problem** using **backtracking**.
+
+
+ Algorithm
+
+- For each vertex, try assigning one of the `M` colors.
+- Check if the current color assignment is **safe** (no adjacent vertex has the same color).
+- If safe, move to the next vertex recursively.
+- If not, backtrack and try a different color.
+
+
+ Input Format
+
+1. Number of vertices `n`
+2. Adjacency matrix of the graph (size `n x n`)
+3. Number of colors `m`
+
+
+Time Complexity
+Worst-case: O(m^n), where m = number of colors, n = number of vertices.
+
+       #include <iostream>
+	   #include <vector>
+	   using namespace std;
+
+	   bool isSafe(int node, int color[], vector<vector<int>>& graph, int n, int col) {
+        for (int k = 0; k < n; k++) {
+        if (graph[node][k] == 1 && color[k] == col)
+            return false;
+        }
+       return true;
+       }
+
+       bool solve(int node, int color[], int m, int n, vector<vector<int>>& graph) {
+       if (node == n) return true;
+
+    	for (int col = 1; col <= m; col++) {
+        if (isSafe(node, color, graph, n, col)) {
+            color[node] = col;
+            if (solve(node + 1, color, m, n, graph)) return true;
+            color[node] = 0; // backtrack
+        }
+   	   }
+
+    	return false;
+	   }
+
+	   void graphColoring(vector<vector<int>>& graph, int m) {
+      	int n = graph.size();
+    	int color[n];
+    	for (int i = 0; i < n; i++) color[i] = 0;
+
+    	if (solve(0, color, m, n, graph)) {
+        cout << "Solution exists. Vertex colors are:\n";
+        for (int i = 0; i < n; i++) {
+            cout << "Vertex " << i << " ---> Color " << color[i] << endl;
+        }
+   	   } else {
+        cout << "No solution exists with " << m << " colors.\n";
+    	}
+	   }
+
+	   int main() {
+    	int n, m;
+    	cout << "Enter number of vertices: ";
+    	cin >> n;
+
+    	vector<vector<int>> graph(n, vector<int>(n, 0));
+    	cout << "Enter adjacency matrix:\n";
+   	 	 for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            cin >> graph[i][j];
+
+    	cout << "Enter number of colors (M): ";
+    	cin >> m;
+
+    	graphColoring(graph, m);
+
+    	return 0;
+	   }
+
+ **21. N-Queens Problem -** 
+
+##  Problem Statement:- The **N-Queens problem** is the challenge of placing `N` queens on an `N x N` chessboard such that no two queens threaten each other. A queen can attack any piece located in the same row, column, or diagonal.
+
+This C++ implementation solves the N-Queens problem using **backtracking** and finds all possible solutions where `N` queens can be placed on the board safely.
+
+
+## Algorithm
+
+The solution uses **backtracking** to explore all possible placements of queens on the chessboard:
+
+1. For each row, place a queen in a valid column.
+2. Check if the current position is **safe**:
+   - No queen should be in the same column.
+   - No queen should be in the same diagonal (both left and right).
+3. If the position is valid, move to the next row and repeat the process.
+4. If all rows are successfully filled, the solution is added to the result.
+5. If no valid position is found, backtrack and try different configurations.
+
+	
+##  Time Complexity
+
+- **Worst-case time complexity:** `O(N!)` due to the nature of backtracking, where we try placing queens in every row and check for conflicts.
+
+
+## Input Format
+
+1. An integer `N` representing the size of the chessboard (N x N).
+   
+
+	   #include <iostream>
+	   #include <vector>
+	   #include <string>
+	   using namespace std;
+
+	   void printBoard(vector<string>& board) {
+    	for (int i = 0; i < board.size(); i++) {
+        cout << board[i] << endl;
+    	}
+ 	     cout << endl;
+	   }
+
+	   bool isSafe(int row, int col, vector<string>& board, int n) {
+ 	   // Check upper column
+	    for (int i = 0; i < row; i++)
+        if (board[i][col] == 'Q') return false;
+
+    	// Check upper-left diagonal
+    	for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j] == 'Q') return false;
+
+    	// Check upper-right diagonal
+  		  for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++)
+        if (board[i][j] == 'Q') return false;
+
+    	return true;
+		}
+
+		void solve(int row, vector<string>& board, int n, vector<vector<string>>& result) {
+    	if (row == n) {
+        result.push_back(board);
+        return;
+    	}
+
+     	for (int col = 0; col < n; col++) {
+        if (isSafe(row, col, board, n)) {
+            board[row][col] = 'Q';
+            solve(row + 1, board, n, result);
+            board[row][col] = '.'; // backtrack
+        }
+ 	   }
+		}
+
+	    vector<vector<string>> solveNQueens(int n) {
+    	vector<vector<string>> result;
+    	vector<string> board(n, string(n, '.'));
+    	solve(0, board, n, result);
+    	return result;
+	     }
+
+	   int main() {
+    	  int n;
+    	cout << "Enter value of N: ";
+    	cin >> n;
+
+    	vector<vector<string>> solutions = solveNQueens(n);
+
+    	cout << "Total solutions: " << solutions.size() << "\n\n";
+
+    	for (int i = 0; i < solutions.size(); i++) {
+        vector<string>& board = solutions[i];
+        printBoard(board);
+    	}
+
+    	return 0;
+		}
+
+  **#22. QuickHull Algorithm for Convex Hull - **
+
+## Problem Statement:- The **Convex Hull Problem** is the task of finding the smallest convex polygon that can enclose a given set of points in a plane. The **QuickHull algorithm** is an efficient algorithm to find the convex hull of a set of points in `O(n log n)` time, based on the divide-and-conquer approach.
+
+This C++ implementation computes the convex hull of a set of 2D points using the **QuickHull** algorithm.
+
+## Algorithm
+QuickHull follows a divide-and-conquer approach:
+
+1. **Divide** the points into two sets, one on the left of the line formed by the first two points, and one on the right.
+2. **Recursively** find the convex hull of both sets by:
+   - Finding the farthest point from the line.
+   - Dividing the set into two parts (left and right of the new line) and repeating the process.
+3. **Merge** the results from the two sets to form the convex hull.
+
+
+##  Time Complexity
+
+- **Worst-case time complexity**: `O(n log n)` where `n` is the number of points.
+- In practice, the QuickHull algorithm is quite efficient and performs well for large datasets.
 
 
 
+## Input Format:-
+1. The program reads a list of points in 2D space (each point having an `x` and `y` coordinate).
+2. The points are stored in a vector of `Point` structures.
+
+
+	   #include <iostream>
+	   #include <vector>
+	   #include <cmath>
+	   #include <algorithm>
+	   using namespace std;
+
+   	   // Structure to represent a point in 2D
+	   struct Point {
+    	 int x, y;
+	 	};
+
+// Function to find the side of a point with respect to a line
+
+	int findSide(Point p1, Point p2, Point p) {
+    int val = (p.y - p1.y) * (p2.x - p1.x) -
+              (p2.y - p1.y) * (p.x - p1.x);
+    if (val > 0) return 1;
+    if (val < 0) return -1;
+    return 0;
+	}
+
+// Function to calculate distance between point p and line p1p2
+
+	int lineDist(Point p1, Point p2, Point p) {
+    return abs((p.y - p1.y) * (p2.x - p1.x) -
+               (p2.y - p1.y) * (p.x - p1.x));
+		}
+
+// Recursive function to find points on the convex hull
+
+	void quickHull(vector<Point>& points, Point p1, Point p2, int side, vector<Point>& hull) {
+    int index = -1;
+    int maxDist = 0;
+
+    for (int i = 0; i < points.size(); i++) {
+        int temp = lineDist(p1, p2, points[i]);
+        if (findSide(p1, p2, points[i]) == side && temp > maxDist) {
+            index = i;
+            maxDist = temp;
+        }
+    }
+
+    if (index == -1) {
+        hull.push_back(p1);
+        hull.push_back(p2);
+        return;
+    }
+
+    // Recur for two parts
+    quickHull(points, points[index], p1, -findSide(points[index], p1, p2), hull);
+    quickHull(points, points[index], p2, -findSide(points[index], p2, p1), hull);
+}
+
+	void printHull(vector<Point>& points) {
+    if (points.size() < 3) {
+        cout << "Convex hull not possible\n";
+        return;
+    }
+
+    int min_x = 0, max_x = 0;
+    for (int i = 1; i < points.size(); i++) {
+        if (points[i].x < points[min_x].x) min_x = i;
+        if (points[i].x > points[max_x].x) max_x = i;
+    }
+
+    vector<Point> hull;
+
+    // Recursively find convex hull on both sides
+    quickHull(points, points[min_x], points[max_x], 1, hull);
+    quickHull(points, points[min_x], points[max_x], -1, hull);
+
+    // Remove duplicates
+    sort(hull.begin(), hull.end(), [](Point a, Point b) {
+        return (a.x < b.x) || (a.x == b.x && a.y < b.y);
+    });
+    hull.erase(unique(hull.begin(), hull.end(), [](Point a, Point b) {
+        return a.x == b.x && a.y == b.y;
+    }), hull.end());
+
+    cout << "Points in Convex Hull:\n";
+    for (Point p : hull)
+        cout << "(" << p.x << ", " << p.y << ")\n";
+	}
+
+	int main() {
+    vector<Point> points = {{0, 3}, {1, 1}, {2, 2}, {4, 4},
+                            {0, 0}, {1, 2}, {3, 1}, {3, 3}};
+    printHull(points);
+    return 0;
+	}
+
+**Sample INPUT:-**
+
+	 vector<Point> points = {{0, 3}, {1, 1}, {2, 2}, {4, 4},
+                        {0, 0}, {1, 2}, {3, 1}, {3, 3}};
+
+**Sample OUTPUT:-**
+
+	  Points in Convex Hull:
+	(0, 0)
+	(3, 1)
+	(4, 4)
+	(0, 3)
+	(3, 3)
 
 
 
-  
 
 
 
